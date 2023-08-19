@@ -31,12 +31,8 @@ void runDoublyLinkedListTests() {
     std::cout << "Front after insert: " << myList.front() << ", Back after insert: " << myList.back() << std::endl; // Expect: 10, 20
 
     // Test erase
-    T* erasedData = myList.erase(myList.begin());
-    if (erasedData) {
-        std::cout << "Erased data: " << *erasedData << std::endl; // Expect: 10
-    } else {
-        std::cout << "Data not found or list is empty." << std::endl;
-    }
+    myList.erase(myList.begin());
+    myList.begin();
 
     // Test resize
     myList.resize(3);
@@ -46,12 +42,13 @@ void runDoublyLinkedListTests() {
     doubly_linked_list<T> newList;
     newList.push_back(100);
     myList.swap(newList);
+    newList.print();
+    myList.print();
 
     std::cout << "Front after swap: " << myList.front() << ", Back after swap: " << myList.back() << std::endl; // Expect: 100, 100
 }
 
 int main() {
     runDoublyLinkedListTests<int>(); // Replace with your desired data type
-
     return 0;
 }
