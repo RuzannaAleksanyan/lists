@@ -54,20 +54,6 @@ public:
 
 };
 
-template <typename T>
-void doubly_linked_list<T>::print() {
-    node<T>* cur = m_head;
-    if(m_size != 0) {
-        while(cur->m_next != nullptr) {
-            std::cout << cur->m_data << " ";
-            cur = cur->m_next;
-        }
-        std::cout << cur->m_data << " ";
-    }
-
-    std::cout << std::endl;
-}
-
 // ctor
 template <typename T>
 doubly_linked_list<T>::doubly_linked_list()
@@ -361,6 +347,20 @@ void swap_node(node<T>*& list1, node<T>*& list2) {
     node<T>* tmp = list1;
     list1 = list2;
     list2 = tmp;
+}
+
+template <typename T>
+void doubly_linked_list<T>::print() {
+    node<T>* cur = m_head;
+    if(m_size != 0) {
+        while(cur->m_next != nullptr) {
+            std::cout << cur->m_data << " ";
+            cur = cur->m_next;
+        }
+        std::cout << cur->m_data << " ";
+    }
+
+    std::cout << std::endl;
 }
 
 #endif
