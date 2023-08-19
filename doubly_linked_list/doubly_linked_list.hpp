@@ -5,6 +5,7 @@
 
 #include <utility>
 #include <stdexcept>
+#include <iostream>
 
 template <typename T>
 class doubly_linked_list
@@ -47,9 +48,25 @@ public:
     void resize(int count);
 
     void insert(const int pos, const T& value);
-    T* erase(const T* pos);
+    void erase(const T* pos);
+
+    void print();
 
 };
+
+template <typename T>
+void doubly_linked_list<T>::print() {
+    node<T>* cur = m_head;
+    if(m_size != 0) {
+        while(cur->m_next != nullptr) {
+            std::cout << cur->m_data << " ";
+            cur = cur->m_next;
+        }
+        std::cout << cur->m_data << " ";
+    }
+
+    std::cout << std::endl;
+}
 
 // ctor
 template <typename T>
@@ -144,6 +161,7 @@ void doubly_linked_list<T>::push_front(const T& value)
 
     if (m_head != nullptr) {
         m_head->m_prev = tmp;
+        tmp->m_next = m_head;
     } else {
         m_tail = tmp;
     }
@@ -195,13 +213,13 @@ void doubly_linked_list<T>::pop_back()
     }
 
     node<T>* old_tail = m_tail;
-    m_tail = m_tail->m_prev;
 
-    if (m_tail != nullptr) {
-        old_tail->m_next = nullptr;
-    }
-    else {
+    if (m_size == 1) {
         m_head = nullptr;
+        m_tail = nullptr;
+    } else {
+        m_tail = m_tail->m_prev;
+        m_tail->m_next = nullptr;
     }
 
     delete old_tail;
@@ -227,8 +245,7 @@ T& doubly_linked_list<T>::front() const
 }
 
 template <typename T>
-T& doubly_linked_list<T>::back() const
-{
+T& doubly_linked_list<T>::back() const {
     return m_tail->m_data;
 }
 
@@ -248,15 +265,12 @@ T* doubly_linked_list<T>::end() noexcept {
     return &(m_tail->m_data);
 }
 
-
 template <typename T>
 void doubly_linked_list<T>::swap(doubly_linked_list& other ) noexcept {
-    if(m_size == other.m_size) {
-        swap_node(m_head, other.m_head);
-        swap_node(m_tail, other.m_tail);
-    } else {
-        return;
-    }
+
+    swap_node(m_head, other.m_head);
+    swap_node(m_tail, other.m_tail);
+    
 }
 
 template <typename T>
@@ -313,44 +327,34 @@ void doubly_linked_list<T>::insert(const int pos, const T& value) {
 }
 
 template <typename T>
-T* doubly_linked_list<T>::erase(const T* pos) {
-    if (pos == nullptr) {
-        return nullptr; 
+void doubly_linked_list<T>::erase(const T* pos) {
+    if (pos == nullptr || m_size == 0) {
+        return; 
     }
 
-    // Find the node to remove based on the element value
-    node<T>* node_to_remove = nullptr;
     node<T>* cur = m_head;
     while (cur != nullptr) {
         if (&(cur->m_data) == pos) {
-            node_to_remove = cur;
-            break;
+            if (cur == m_head) {
+                m_head = cur->m_next;
+            }
+            if (cur == m_tail) {
+                m_tail = cur->m_prev;
+            }
+            if (cur->m_prev != nullptr) {
+                cur->m_prev->m_next = cur->m_next;
+            }
+            if (cur->m_next != nullptr) {
+                cur->m_next->m_prev = cur->m_prev;
+            }
+            delete cur;
+            --m_size;
+            break;  
         }
         cur = cur->m_next;
     }
-
-    if (node_to_remove == nullptr) {
-        return nullptr;
-    }
-
-    if (node_to_remove->m_prev != nullptr) {
-        node_to_remove->m_prev->m_next = node_to_remove->m_next;
-    } else {
-        m_head = node_to_remove->m_next;
-    }
-
-    if (node_to_remove->m_next != nullptr) {
-        node_to_remove->m_next->m_prev = node_to_remove->m_prev;
-    } else {
-        m_tail = node_to_remove->m_prev;
-    }
-
-    T* value = &(node_to_remove->m_data); 
-    delete node_to_remove;
-    m_size--;
-
-    return value;
 }
+
 
 template <typename T>
 void swap_node(node<T>*& list1, node<T>*& list2) {
