@@ -131,6 +131,7 @@ template <typename T>
 void linked_list<T>::push_front(const T& value) {
     node<T>* tmp = new node(value, m_head);
 
+    tmp->m_next = m_head;
     m_head = tmp;
     ++m_size;
 }
