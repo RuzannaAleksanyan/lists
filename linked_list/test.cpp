@@ -51,6 +51,20 @@ void runLinkedListTests() {
     std::cout << "Erased data: " << erasedData << std::endl; // Expect: 20
 
     std::cout << "Size after insert and erase: " << myList.size() << std::endl; // Expect: 4
+
+    linked_list<int> myList2;
+
+    // Test push_front and push_back
+    myList2.push_front(4);
+    myList2.push_front(5);
+    myList2.push_back(3);
+    myList2.push_back(0);
+
+    std::cout << "Array: ";
+    myList2.print();
+    myList2.sort();
+    std::cout << "Sorted array: ";
+    myList2.print();
 }
 
 int main() {
