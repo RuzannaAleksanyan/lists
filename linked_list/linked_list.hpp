@@ -5,6 +5,7 @@
 
 #include <utility>
 #include <stdexcept>
+#include <iostream> 
 
 template <typename T>
 class linked_list {
@@ -45,6 +46,10 @@ public:
 
     void insert(const int pos, const T& value);
     T erase(const T* pos);
+
+    void sort();
+
+    void print(); 
 };
 
 // ctor
@@ -129,7 +134,7 @@ void linked_list<T>::clear() noexcept {
 
 template <typename T>
 void linked_list<T>::push_front(const T& value) {
-    node<T>* tmp = new node(value, m_head);
+    node<T>* tmp = new node<T>(value, m_head);
 
     tmp->m_next = m_head;
     m_head = tmp;
@@ -290,7 +295,7 @@ void linked_list<T>::insert(const int pos, const T& value) {
         return;
     }
 
-    node<T>* new_node = new node(value);
+    node<T>* new_node = new node<T>(value);
 
     if(pos == 0) {
         new_node->m_next = m_head;
@@ -352,5 +357,32 @@ void swap_node(node<T>*& list1, node<T>*& list2) {
     node<T>* tmp = list1;
     list1 = list2;
     list2 = tmp;
+}
+
+template <typename T>
+void linked_list<T>::sort() {
+    node<T>* cur_i = m_head;
+    while(cur_i != nullptr) {
+        node<T>* cur_j = cur_i->m_next;
+        while(cur_j != nullptr) {
+            if(cur_j->m_data < cur_i->m_data) {
+                T tmp = cur_j->m_data;
+                cur_j->m_data = cur_i->m_data;
+                cur_i->m_data = tmp;
+            }
+            cur_j = cur_j->m_next;
+        }
+        cur_i = cur_i->m_next;
+    }
+}
+
+template <typename T>
+void linked_list<T>::print() {
+    node<T>* cur = m_head;
+    while(cur != nullptr) {
+        std::cout << cur->m_data << " ";
+        cur = cur->m_next;
+    }
+    std::cout << std::endl;
 }
 #endif
