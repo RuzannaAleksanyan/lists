@@ -46,6 +46,19 @@ void runDoublyLinkedListTests() {
     myList.print();
 
     std::cout << "Front after swap: " << myList.front() << ", Back after swap: " << myList.back() << std::endl; // Expect: 100, 100
+
+    // Test sort
+    newList.push_front(40);
+    newList.push_back(10);
+    newList.push_front(50);
+
+    std::cout << "List before sort: ";
+    newList.print(); // Expect: 50, 40, 100, 10
+
+    newList.sort();
+
+    std::cout << "List after sort: ";
+    newList.print(); // Expect: 10, 40, 50, 100
 }
 
 int main() {

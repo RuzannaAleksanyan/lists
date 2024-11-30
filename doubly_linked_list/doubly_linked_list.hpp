@@ -52,6 +52,8 @@ public:
 
     void print();
 
+    void sort();
+
 };
 
 // ctor
@@ -361,6 +363,60 @@ void doubly_linked_list<T>::print() {
     }
 
     std::cout << std::endl;
+}
+
+// template <typename T>
+// void doubly_linked_list<T>::sort() {
+//     if(m_head == nullptr || m_head->m_next == nullptr) {
+//         return;
+//     }
+
+//     node<T>* cur = m_head;
+//     node<T>* tmp = cur->m_next;
+
+//     while(cur != m_tail && tmp->m_next != nullptr) {
+//         if(cur->m_data > tmp->m_data) {
+//             node<T>* n = m_head;
+//             while(n->m_data < tmp->m_data) {
+//                 n = n->m_next;
+//             }   
+             
+//             cur->m_next = cur->m_next->m_next;
+//             tmp->m_next->m_prev = cur;
+//             n->m_prev->m_next = tmp;
+//             tmp->m_prev = n->m_prev;
+//             tmp->m_next = n;
+//             n->m_prev = tmp;
+//             tmp = cur->m_next;
+//         } else {
+//             tmp = tmp->m_next;
+//             cur = cur->m_next;
+//         }
+//     }
+// }
+
+
+template <typename T>
+void doubly_linked_list<T>::sort() {
+    if (m_head == nullptr || m_head->m_next == nullptr) {
+        return; 
+    }
+
+    bool swapped;
+    do {
+        swapped = false;
+        node<T>* cur = m_head;
+        while (cur->m_next != nullptr) {
+            if (cur->m_data > cur->m_next->m_data) {
+                T temp = cur->m_data;
+                cur->m_data = cur->m_next->m_data;
+                cur->m_next->m_data = temp;
+
+                swapped = true;
+            }
+            cur = cur->m_next;
+        }
+    } while (swapped); 
 }
 
 #endif
