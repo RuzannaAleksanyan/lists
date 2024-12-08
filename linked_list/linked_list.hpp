@@ -2,16 +2,18 @@
 #define LINKEDLIST
 
 #include "node.hpp"
+#include "linked_list_iterator.hpp"
 
 #include <utility>
 #include <stdexcept>
-#include <iostream> 
+#include <iostream>
 
 template <typename T>
 class linked_list {
 private:
     node<T>* m_head;
     int m_size;
+
 public:
     linked_list();
 
@@ -49,26 +51,25 @@ public:
 
     void sort();
 
-    void print(); 
+    void print();
+
+    linked_list_iterator<T> beginn() noexcept;
+    linked_list_iterator<T> endd() noexcept;
 };
 
 // ctor
 template <typename T>
 linked_list<T>::linked_list()
-        : m_head(nullptr)
-        , m_size(0)
-{
+    : m_head(nullptr), m_size(0) {
 }
 
-//copy ctor
+// copy ctor
 template <typename T>
-linked_list<T>::linked_list(const linked_list<T>& other) 
-        : m_head(nullptr)
-        , m_size(0)
-{
+linked_list<T>::linked_list(const linked_list<T>& other)
+    : m_head(nullptr), m_size(0) {
     node<T>* cur = other.m_head;
 
-    while(cur != nullptr) {
+    while (cur != nullptr) {
         push_back(cur->m_data);
         cur = cur->m_next;
     }
@@ -76,13 +77,12 @@ linked_list<T>::linked_list(const linked_list<T>& other)
 
 // copy assignment operator
 template <typename T>
-linked_list<T>& linked_list<T>::operator=(const linked_list<T>& other)
-{
-    if(this != other) {
+linked_list<T>& linked_list<T>::operator=(const linked_list<T>& other) {
+    if (this != other) {
         clear();
         node<T>* cur = other->m_head;
 
-        while(cur != nullptr) {
+        while (cur != nullptr) {
             push_back(cur->m_data);
             cur = cur->m_next;
         }
@@ -93,10 +93,8 @@ linked_list<T>& linked_list<T>::operator=(const linked_list<T>& other)
 
 // move ctor
 template <typename T>
-linked_list<T>::linked_list(linked_list<T>&& other) 
-        : m_head(other.m_head)
-        , m_size(other.m_size)
-{
+linked_list<T>::linked_list(linked_list<T>&& other)
+    : m_head(other.m_head), m_size(other.m_size) {
     other.m_head = nullptr;
     other.m_size = 0;
 }
@@ -104,7 +102,7 @@ linked_list<T>::linked_list(linked_list<T>&& other)
 // move assignment operator
 template <typename T>
 linked_list<T>& linked_list<T>::operator=(linked_list<T>&& other) {
-    if(this != &other) {
+    if (this != &other) {
         swap_node(m_head, other.m_head);
         int tmp = m_size;
         m_size = other.m_size;
@@ -122,7 +120,7 @@ template <typename T>
 void linked_list<T>::clear() noexcept {
     node<T>* cur = m_head;
 
-    while(cur != nullptr) {
+    while (cur != nullptr) {
         node<T>* tmp = cur->m_next;
         delete cur;
         cur = tmp;
@@ -147,9 +145,11 @@ void linked_list<T>::push_back(const T& value) {
 
     if (m_head == nullptr) {
         m_head = tmp;
-    } else {
+    }
+    else {
         node<T>* cur = m_head;
-        while (cur->m_next != nullptr) {
+        while (cur->m_next != nullptr)
+        {
             cur = cur->m_next;
         }
         cur->m_next = tmp;
@@ -160,23 +160,23 @@ void linked_list<T>::push_back(const T& value) {
 
 template <typename T>
 void linked_list<T>::pop_front() {
-    if( m_size == 0) {
+    if (m_size == 0) {
         return;
     }
 
     node<T>* old_head = m_head;
     m_head = m_head->m_next;
     delete old_head;
-    -- m_size;
+    --m_size;
 }
 
 template <typename T>
 void linked_list<T>::pop_back() {
-    if(m_head == nullptr) {
-        return ;
+    if (m_head == nullptr) {
+        return;
     }
 
-    if(m_head->m_next == nullptr) {
+    if (m_head->m_next == nullptr) {
         delete m_head;
         m_head = nullptr;
         --m_size;
@@ -186,7 +186,7 @@ void linked_list<T>::pop_back() {
     node<T>* prev = nullptr;
     node<T>* cur = m_head;
 
-    while(cur->m_next != nullptr) {
+    while (cur->m_next != nullptr) {
         prev = cur;
         cur = cur->m_next;
     }
@@ -209,7 +209,7 @@ int linked_list<T>::size() const noexcept {
 template <typename T>
 T& linked_list<T>::front() const {
     if (m_head == nullptr) {
-        throw std::runtime_error("The list is empty"); 
+        throw std::runtime_error("The list is empty");
     }
 
     return m_head->m_data;
@@ -218,12 +218,12 @@ T& linked_list<T>::front() const {
 template <typename T>
 T& linked_list<T>::back() const {
     if (m_head == nullptr) {
-        throw std::runtime_error("The list is empty"); 
+        throw std::runtime_error("The list is empty");
     }
 
     node<T>* cur = m_head;
 
-    while(cur->m_next != nullptr) {
+    while (cur->m_next != nullptr) {
         cur = cur->m_next;
     }
 
@@ -233,32 +233,33 @@ T& linked_list<T>::back() const {
 template <typename T>
 T* linked_list<T>::begin() noexcept {
     if (m_head == nullptr) {
-        throw std::runtime_error("The list is empty"); 
+        throw std::runtime_error("The list is empty");
     }
 
-    return m_head;
+    return &(m_head->m_data);
 }
 
 template <typename T>
 T* linked_list<T>::end() noexcept {
     if (m_head == nullptr) {
-        throw std::runtime_error("The list is empty"); 
+        throw std::runtime_error("The list is empty");
     }
 
     node<T>* cur = m_head;
 
-    while(cur->m_next != nullptr) {
+    while (cur->m_next != nullptr) {
         cur = cur->m_next;
     }
 
-    return cur->m_data;
+    return &(cur->m_data);
 }
 
 template <typename T>
 void linked_list<T>::swap(linked_list& other) noexcept {
-    if(m_size == other.m_size) {
+    if (m_size == other.m_size) {
         swap_node(m_head, other.m_head);
-    } else {
+    }
+    else {
         return;
     }
 }
@@ -269,38 +270,40 @@ void linked_list<T>::resize(int count) {
         throw std::invalid_argument("resize: count cannot be negative");
     }
 
-    if(count == m_size) {
+    if (count == m_size) {
         return;
     }
 
-    if(count < m_size) {
-        while(m_size > count) {
+    if (count < m_size) {
+        while (m_size > count) {
             pop_back();
         }
-    } else {
-        while(m_size < count) {
+    }
+    else {
+        while (m_size < count) {
             push_back(T());
         }
     }
 }
 
 template <typename T>
-void linked_list<T>::insert(const int pos, const T& value) {
+void linked_list<T>::insert(const int pos, const T &value) {
     if (pos < 0 || pos > m_size) {
         throw std::out_of_range("insert: Position is out of range");
     }
 
-    if(pos == m_size) {
+    if (pos == m_size) {
         push_back(value);
         return;
     }
 
     node<T>* new_node = new node<T>(value);
 
-    if(pos == 0) {
+    if (pos == 0) {
         new_node->m_next = m_head;
         m_head = new_node;
-    } else {
+    }
+    else {
         node<T>* tmp = m_head;
         for (int i = 0; i < pos - 1; ++i) {
             tmp = tmp->m_next;
@@ -325,7 +328,7 @@ T linked_list<T>::erase(const T* pos) {
     }
 
     if (m_head->m_data == value) {
-        node<T>* old_head = m_head;
+        node<T> *old_head = m_head;
         m_head = m_head->m_next;
         T data = old_head->m_data;
         delete old_head;
@@ -362,10 +365,10 @@ void swap_node(node<T>*& list1, node<T>*& list2) {
 template <typename T>
 void linked_list<T>::sort() {
     node<T>* cur_i = m_head;
-    while(cur_i != nullptr) {
+    while (cur_i != nullptr) {
         node<T>* cur_j = cur_i->m_next;
-        while(cur_j != nullptr) {
-            if(cur_j->m_data < cur_i->m_data) {
+        while (cur_j != nullptr) {
+            if (cur_j->m_data < cur_i->m_data) {
                 T tmp = cur_j->m_data;
                 cur_j->m_data = cur_i->m_data;
                 cur_i->m_data = tmp;
@@ -377,12 +380,24 @@ void linked_list<T>::sort() {
 }
 
 template <typename T>
-void linked_list<T>::print() {
+void linked_list<T>::print()
+{
     node<T>* cur = m_head;
-    while(cur != nullptr) {
+    while (cur != nullptr) {
         std::cout << cur->m_data << " ";
         cur = cur->m_next;
     }
     std::cout << std::endl;
 }
+
+template <typename T>
+linked_list_iterator<T> linked_list<T>::beginn() noexcept {
+    return linked_list_iterator<T>(m_head);
+}
+
+template <typename T>
+linked_list_iterator<T> linked_list<T>::endd() noexcept {
+    return linked_list_iterator<T>(nullptr);
+}
+
 #endif

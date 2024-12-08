@@ -65,11 +65,15 @@ void runLinkedListTests() {
     myList2.sort();
     std::cout << "Sorted array: ";
     myList2.print();
+
+    // Test iterator 
+    for (auto it = myList.begin(); it != myList.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
 }
 
 int main() {
-    // Run tests for int
     runLinkedListTests<int>();
-
     return 0;
 }
